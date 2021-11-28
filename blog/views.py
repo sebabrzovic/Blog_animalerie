@@ -24,13 +24,13 @@
 #     else:
 #         form = MoveForm()
 #     if form.is_valid():
-#         ancien_lieu = get_object_or_404(Equipement, id_equip=animal.lieu.id_equip)
-#         ancien_lieu.disponibilite = "libre"
-#         ancien_lieu.save()
+#         lugar_antiguo = get_object_or_404(Equipement, id_equip=animal.lieu.id_equip)
+#         lugar_antiguo.disponibilite = "libre"
+#         lugar_antiguo.save()
 #         form.save()
-#         nouveau_lieu = get_object_or_404(Equipement, id_equip=animal.lieu.id_equip)
-#         nouveau_lieu.disponibilite = "occupé"
-#         nouveau_lieu.save()
+#         nuevo_lugar = get_object_or_404(Equipement, id_equip=animal.lieu.id_equip)
+#         nuevo_lugar.disponibilite = "occupé"
+#         nuevo_lugar.save()
 #         return redirect('animal_detail', id_animal=id_animal)
 #     else:
 #         form = MoveForm()
@@ -47,51 +47,51 @@ from .models import Animal, Equipement
 def animal_list(request):
     animals = Animal.objects.filter()
     equipements = Equipement.objects.filter()
-    return render(request, 'blog/animal_list.html', {'equipements': equipements, 'animals': animals})
-
+    return render(request, 'animalerie/animal_list.html', {'animals': animals, 'equipements': equipements})
+                  
 def equipement_list(request):
     equipements = Equipement.objects.filter()
-    return render(request, 'blog/animal_list.html', {'equipements': equipements})
- 
+    return render(request, 'animalerie/animal_list.html', {'equipements': equipements})
+  
 def animal_detail(request, id_animal):
     animal = get_object_or_404(Animal, id_animal=id_animal)
     lieu = animal.lieu
     form=MoveForm()
     if request.method == "POST":
-        ancien_lieu = get_object_or_404(Equipement, id_equip=animal.lieu.id_equip)
+        lugar_antiguo = get_object_or_404(Equipement, id_equip=animal.lieu.id_equip)
         form = MoveForm(request.POST, instance=animal)
         if form.is_valid():
             form.save(commit=False)
-            nouveau_lieu = get_object_or_404(Equipement, id_equip=animal.lieu.id_equip)
-            if nouveau_lieu.disponibilite=='libre' and nouveau_lieu.id_equip=='mangeoire' and animal.etat == 'affamé':
+            nuevo_lugar = get_object_or_404(Equipement, id_equip=animal.lieu.id_equip)
+            if nuevo_lugar.disponibilite=='libre' and nuevo_lugar.id_equip=='mangeoire' and animal.etat == 'affamé':
                 animal.etat='repus'
+                nuevo_lugar.disponibilite='occupé'
+                lugar_antiguo.disponibilite='libre'
                 animal.save()
-                ancien_lieu.disponibilite='libre'
-                ancien_lieu.save()
-                nouveau_lieu.disponibilite='occupé'
-                nouveau_lieu.save()
+                lugar_antiguo.save()
+                nuevo_lugar.save()
                 return redirect('animal_detail', id_animal=id_animal)
-            elif nouveau_lieu.disponibilite=='libre' and nouveau_lieu.id_equip=='roue' and animal.etat == 'repus':
+            elif nuevo_lugar.disponibilite=='libre' and nuevo_lugar.id_equip=='roue' and animal.etat == 'repus':
                 animal.etat='fatigue'
+                nuevo_lugar.disponibilite='occupé'
+                lugar_antiguo.disponibilite='libre'
                 animal.save()
-                ancien_lieu.disponibilite='libre'
-                ancien_lieu.save()
-                nouveau_lieu.disponibilite='occupé'
-                nouveau_lieu.save()
+                lugar_antiguo.save()
+                nuevo_lugar.save()
                 return redirect('animal_detail', id_animal=id_animal)
-            elif nouveau_lieu.disponibilite=='libre' and nouveau_lieu.id_equip=='nid' and animal.etat == 'fatigue':
+            elif nuevo_lugar.disponibilite=='libre' and nuevo_lugar.id_equip=='nid' and animal.etat == 'fatigue':
                 animal.etat='endormi'
+                nuevo_lugar.disponibilite='occupé'
+                lugar_antiguo.disponibilite='libre'
                 animal.save()
-                ancien_lieu.disponibilite='libre'
-                ancien_lieu.save()
-                nouveau_lieu.disponibilite='occupé'
-                nouveau_lieu.save()
+                lugar_antiguo.save()
+                nuevo_lugar.save()
                 return redirect('animal_detail', id_animal=id_animal)
-            elif nouveau_lieu.disponibilite=='libre' and nouveau_lieu.id_equip=='litière' and animal.etat == 'endormi':
+            elif nuevo_lugar.disponibilite=='libre' and nuevo_lugar.id_equip=='litière' and animal.etat == 'endormi':
                 animal.etat='affamé'
-                animal.save()
-                ancien_lieu.disponibilite='libre'
-                ancien_lieu.save()
+                lugar_antiguo.disponibilite='libre'
+                animal.save()                
+                lugar_antiguo.save()
                 return redirect('animal_detail', id_animal=id_animal)
             else:
                 message="L'animal ne peut pas être déplacé"
