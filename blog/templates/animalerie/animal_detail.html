@@ -1,29 +1,52 @@
+{% comment %} parte central de la pagina web {% endcomment %}
+
+
+{% extends 'animalerie/base.html' %}
+{% load static %}
+{% block content %}
+<div class="page-header_detail">
+    <h1>
+        <center><b href="/"><img src="{{animal.photo}}" width="130" height="100"/></b></center>
+        <br>
+        <center><e href="/">{{ animal.id_animal }} est dans : {{ animal.lieu }}. Il est {{ animal.etat }}.</e></center>
+        
+    </h1>
+</div>
+
+{% comment %} boton para cambiar  {% endcomment %}
+<div class="page-header_detail2">
+    <form method="POST" class="post-form" >{% csrf_token %}
+        Changer : {{ form.as_ul }}
+        <button type="submit" class="btn btn-outline-light">OK</button>
+        <a href="{% url 'animal_list' %}">Retour</a>
+    </form>
+</div>
+
+    {% if message != ''%}
+        <div class="alert alert-danger" role="alert">
+            {{message}}
+        </div>
+    {% endif %}
+ 
+{% endblock %}
+
+{% comment %} 
 {% load static %}
 <html>
     <head>
-        <title>Animalerie</title>
+        <title>animalerie</title>
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
         <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="{% static 'css/blog.css' %}">
-        <a href="{% url 'animal_detail' id_animal=animal.id_animal %}">{{ animal.id_animal }}</a>
     </head>
     <body>
-        {% extends 'animalerie/base.html' %}
-        {% load static %}
         {% block content %}
-        <div class="page-header">
-            <h1>
-                <a href="/">{{ animal.id_animal }}</a>
-            </h1>
-            <form method="POST" class="post-form">{% csrf_token %}
-                <b> Changer : </b> {{ form.as_ul }}
-                <button type="submit" class="btn btn-outline-light">OK</button>
-                <a href="{% url 'animal_list' %}">Back</a>
-            </form>
-        </div>
-         
-         
+            <div class="Animals">
+                
+                <h2>{{ Animal.id_animal }}</h2>
+                <p>{{ Animal.etat|linebreaksbr }}</p>
+            </div>
         {% endblock %}
     </body>
-</html>
+</html> {% endcomment %}

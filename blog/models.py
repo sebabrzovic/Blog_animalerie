@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.db import models
-from django.utils import timezone
 
 class Equipement(models.Model):
     id_equip = models.CharField(max_length=100, primary_key=True)
